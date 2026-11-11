@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADS-B 지역 항공교통 데이터 수집·분석 시스템</title>
-    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -32,26 +31,20 @@
             }
         }
     </script>
-    
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <!-- Leaflet.js Map Library -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <!-- PapaParse for CSV Processing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
     <!-- 지도 타일 접근 차단 방지를 위한 Referrer Policy 설정 -->
     <meta name="referrer" content="no-referrer">
-
     <style>
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
         .tab-btn {
             position: relative;
             transition: all 0.2s ease;
@@ -70,20 +63,17 @@
             background-color: #2563eb;
             border-radius: 2px 2px 0 0;
         }
-
         .subtab-btn.active {
             background-color: #2563eb;
             color: #ffffff;
             font-weight: 600;
         }
-
         #flight-map {
             width: 100%;
             height: 540px;
             border-radius: 0.75rem;
             z-index: 10;
         }
-
         /* Custom Leaflet Marker Labels */
         .leaflet-marker-icon-label {
             background: rgba(255, 255, 255, 0.95);
@@ -96,7 +86,6 @@
             white-space: nowrap;
             color: #0f172a;
         }
-
         .landmark-pin {
             display: flex;
             align-items: center;
@@ -114,14 +103,12 @@
     </style>
 </head>
 <body class="bg-white text-slate-800 font-sans min-h-screen flex flex-col antialiased">
-
     <!-- ========================================== -->
     <!-- [상단 헤더 및 수평 내비게이션] -->
     <!-- ========================================== -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                
                 <!-- 브랜드 타이틀 -->
                 <div class="flex items-center space-x-3">
                     <div class="w-9 h-9 rounded-lg bg-[#80142b] flex items-center justify-center text-white shadow-sm">
@@ -131,7 +118,6 @@
                         ADS-B 지역 항공교통 데이터 수집·분석 시스템
                     </h1>
                 </div>
-
                 <!-- 상단 내비게이션 바 -->
                 <nav class="flex items-center space-x-1 sm:space-x-4 h-full">
                     <button onclick="switchTab('home')" id="tab-btn-home" class="tab-btn active px-3 py-5 text-sm text-slate-600 hover:text-blue-600 flex items-center space-x-2">
@@ -151,31 +137,25 @@
                         <span>데이터 통계 및 시각화</span>
                     </button>
                 </nav>
-
             </div>
         </div>
     </header>
-
     <!-- ========================================== -->
     <!-- [메인 콘텐츠 영역] -->
     <!-- ========================================== -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between">
-
         <!-- ========================================= -->
         <!-- 1. 홈 탭 (#view-home) -->
         <!-- ========================================= -->
         <section id="view-home" class="tab-view flex-1 flex flex-col justify-between min-h-[550px]">
-
             <!-- 상단 콘텐츠 영역 (와우고등학교 AIoT 동아리 메인 랜딩) -->
             <div id="home-custom-content" class="flex-1 py-2 space-y-8">
-                
                 <!-- 히어로 메인 비주얼 배너 (와우고 버건디 심볼 테마) -->
                 <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#5c0a19] via-[#80142b] to-[#1e1b2e] text-white p-8 sm:p-10 shadow-xl border border-rose-900/30">
                     <!-- 배경 비행기 벡터 아이콘 -->
                     <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
                         <i class="fa-solid fa-plane-up text-[280px]"></i>
                     </div>
-
                     <div class="relative z-10 max-w-3xl space-y-5">
                         <!-- 동아리 뱃지 & 와우고 방패 로고 엠블럼 헤더 (SINCE 2026 반영) -->
                         <div class="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide text-rose-100">
@@ -187,7 +167,6 @@
                             </svg>
                             <span>WAWOO HIGH SCHOOL • AIoT CLUB • SINCE 2026</span>
                         </div>
-
                         <!-- 메인 타이틀 -->
                         <div class="space-y-2">
                             <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
@@ -197,12 +176,10 @@
                                 ADS-B 지역 항공교통 데이터 수집·분석 시스템
                             </p>
                         </div>
-
                         <!-- 서브 설명 -->
                         <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-2xl">
                             화성시 와우고등학교 주변 공역(<code class="bg-white/10 px-1.5 py-0.5 rounded text-rose-200 font-mono">37°13'10.8"N 126°58'01.1"E</code>) 및 경기 남부 지역을 통과하는 항공기의 ADS-B(1090MHz) 신호를 AIoT 지상 수신 노드로 수집하여 비행 고도, 대지 속도, 항적 궤적을 실시간으로 추적·시각화하는 지능형 웹 관제 시스템입니다.
                         </p>
-
                         <!-- 바로가기 버튼 그룹 -->
                         <div class="pt-2 flex flex-wrap gap-3">
                             <button onclick="switchTab('stats')" class="px-5 py-2.5 rounded-xl bg-white text-[#80142b] hover:bg-rose-50 text-xs font-bold transition shadow-lg flex items-center space-x-2">
@@ -216,10 +193,8 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 주요 핵심 기능 카드 4개 -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    
                     <!-- 카드 1: 1090MHz 데이터 수집 -->
                     <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-10 h-10 rounded-xl bg-rose-50 text-[#80142b] flex items-center justify-center text-lg font-bold">
@@ -230,7 +205,6 @@
                             ADS-B Extended Squitter(1090MHz) 주파수 신호를 무선 수신하여 위도·경도·고도·속도 파라미터를 정밀하게 파싱합니다.
                         </p>
                     </div>
-
                     <!-- 카드 2: 데이터 통계 분석과 시각화 -->
                     <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
@@ -241,7 +215,6 @@
                             날짜별·기체별(icao24) 평균 운항 고도 및 대지속도를 수치로 통계화하고 지점간 비행 궤적을 지도 위에 직관적으로 표시합니다.
                         </p>
                     </div>
-
                     <!-- 카드 3: 자동화 24시간 작동 -->
                     <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-bold">
@@ -252,7 +225,6 @@
                             사람의 별도 개입 없이 AIoT 라즈베리파이 수신 노드를 통해 365일 24시간 무인 상태로 상공의 신호를 실시간 수집·정제합니다.
                         </p>
                     </div>
-
                     <!-- 카드 4: 항공교통 기록 및 이력 관리 -->
                     <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">
@@ -263,11 +235,8 @@
                             수집된 모든 비행 식별자(icao24, 콜사인), 시각 타임스탬프 데이터를 누적 기록하여 비행 이력 조회 및 CSV 관리를 제공합니다.
                         </p>
                     </div>
-
                 </div>
-
             </div>
-
             <!-- 하단 관리자 모드 버튼 및 상태 패널 -->
             <div class="border-t border-slate-200 pt-8 pb-4 mt-auto">
                 <div id="admin-status-bar" class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -276,7 +245,6 @@
                             일반 사용자 모드
                         </span>
                     </div>
-
                     <div class="flex items-center space-x-2">
                         <button onclick="switchToUserMode()" id="btn-user-toggle" class="hidden px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-medium transition flex items-center space-x-2 shadow-sm">
                             <i class="fa-solid fa-user"></i>
@@ -288,7 +256,6 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- 관리자 전환 시 표시되는 CSV 업로드 영역 -->
                 <div id="admin-upload-panel" class="hidden mt-6 p-6 bg-blue-50/60 border-2 border-dashed border-blue-300 rounded-xl space-y-6">
                     <!-- 1. CSV 파일 업로드 카드 -->
@@ -304,7 +271,6 @@
                                 </p>
                             </div>
                         </div>
-
                         <div class="flex items-center space-x-3 w-full md:w-auto">
                             <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="handleCSVUpload(event)" />
                             <button onclick="document.getElementById('csv-file-input').click()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center space-x-2 shadow-sm w-full md:w-auto">
@@ -317,7 +283,6 @@
                             </button>
                         </div>
                     </div>
-
                     <!-- 2. 지도 타일 및 API Key 설정 카드 -->
                     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div class="flex items-start space-x-4">
@@ -331,7 +296,6 @@
                                 </p>
                             </div>
                         </div>
-
                         <div class="w-full md:w-auto">
                             <button onclick="openApiKeyModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center space-x-2 shadow-sm w-full md:w-auto">
                                 <i class="fa-solid fa-sliders"></i>
@@ -339,13 +303,10 @@
                             </button>
                         </div>
                     </div>
-
                     <div id="upload-feedback" class="mt-3 text-xs font-semibold text-blue-700 hidden"></div>
                 </div>
             </div>
         </section>
-
-
         <!-- ========================================= -->
         <!-- 2. ADS-B 탭 (#view-adsb) -->
         <!-- ========================================= -->
@@ -355,7 +316,6 @@
                 <h2 class="text-2xl font-bold text-slate-900">ADS-B (Automatic Dependent Surveillance-Broadcast)</h2>
                 <p class="text-slate-600 text-sm mt-1">차세대 지능형 항공교통 감시 기술의 개념, 작동 메커니즘, 주요 기능 및 항공 데이터 규격 가이드</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 카드 1 -->
                 <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
@@ -373,7 +333,6 @@
                         <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mr-2 mt-0.5"></i><span><strong>Broadcast (방송):</strong> 수신 장비를 갖춘 모든 지상/공중 노드에 무선 전송</span></li>
                     </ul>
                 </div>
-
                 <!-- 카드 2 -->
                 <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
                     <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg mb-4">
@@ -395,7 +354,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 카드 3 -->
                 <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
                     <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-4">
@@ -413,7 +371,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 카드 4 -->
                 <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
                     <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-lg mb-4">
@@ -439,8 +396,6 @@
                 </div>
             </div>
         </section>
-
-
         <!-- ========================================= -->
         <!-- 3. AIoT 탭 (#view-aiot) -->
         <!-- ========================================= -->
@@ -451,7 +406,6 @@
                 <h2 class="text-2xl font-bold text-slate-900">AIoT 동아리 &amp; 데이터 수집·분석 프로젝트</h2>
                 <p class="text-slate-600 text-sm mt-1">와우고등학교 AIoT 동아리 내 소동아리에서 진행하는 독자적인 항공교통 데이터 연구 프로젝트입니다.</p>
             </div>
-
             <!-- 메인 강조 카드: 프로젝트 핵심 차별점 -->
             <div class="bg-gradient-to-r from-slate-900 via-[#5c0a19] to-[#80142b] rounded-2xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
                 <div class="absolute -right-8 -bottom-8 opacity-10 pointer-events-none">
@@ -470,7 +424,6 @@
                     </p>
                 </div>
             </div>
-
             <!-- 차별점 비교 및 개발 특징 Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 단순 관제 vs 소동아리 연구 시스템 비교 -->
@@ -484,7 +437,6 @@
                             <p class="text-xs text-slate-500">기존 모니터링 프로그램과의 차이</p>
                         </div>
                     </div>
-
                     <div class="space-y-3">
                         <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-start space-x-3">
                             <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
@@ -495,7 +447,6 @@
                                 <span class="text-slate-600">실시간 비행기 위치를 지도 위에 띄워 보여주는 일회성 시각화 기능에 한정됨</span>
                             </div>
                         </div>
-
                         <div class="p-3 bg-rose-50/60 rounded-lg border border-rose-200/80 flex items-start space-x-3">
                             <div class="w-6 h-6 rounded-full bg-[#80142b] text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
                                 <i class="fa-solid fa-check"></i>
@@ -507,7 +458,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 오픈소스 활용 및 자체 개발 내역 -->
                 <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
                     <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
@@ -519,7 +469,6 @@
                             <p class="text-xs text-slate-500">오픈소스 활용 및 자체 통계 기능 개발</p>
                         </div>
                     </div>
-
                     <ul class="space-y-3 text-xs text-slate-600">
                         <li class="flex items-start space-x-2.5">
                             <i class="fa-solid fa-layer-group text-blue-500 mt-1"></i>
@@ -536,14 +485,12 @@
                     </ul>
                 </div>
             </div>
-
             <!-- AIoT 데이터 수집 및 분석 프로세스 4단계 -->
             <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
                 <h3 class="font-bold text-slate-900 text-base flex items-center space-x-2">
                     <i class="fa-solid fa-diagram-project text-indigo-600"></i>
                     <span>AIoT 소동아리 연구 파이프라인</span>
                 </h3>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                     <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                         <div class="font-bold text-indigo-600 flex items-center justify-between">
@@ -553,7 +500,6 @@
                         <p class="text-slate-700 font-semibold">1090MHz 데이터 수집</p>
                         <p class="text-slate-500 leading-relaxed">AIoT 수신기를 통해 상공의 ADS-B 신호를 무선으로 수 수집</p>
                     </div>
-
                     <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                         <div class="font-bold text-indigo-600 flex items-center justify-between">
                             <span>02. 디코딩 기반</span>
@@ -562,7 +508,6 @@
                         <p class="text-slate-700 font-semibold">오픈소스 정제 엔진</p>
                         <p class="text-slate-500 leading-relaxed">검증된 오픈소스 수집·시각화 인프라를 바탕으로 패킷 데이터 파싱</p>
                     </div>
-
                     <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                         <div class="font-bold text-indigo-600 flex items-center justify-between">
                             <span>03. 팀 독자 개발</span>
@@ -571,7 +516,6 @@
                         <p class="text-slate-700 font-semibold">통계·분석 기능 개발</p>
                         <p class="text-slate-500 leading-relaxed">우리 팀만의 분석 로직을 올려 기체별 고도·속도 통계 수치 연산</p>
                     </div>
-
                     <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                         <div class="font-bold text-indigo-600 flex items-center justify-between">
                             <span>04. 데이터 시각화</span>
@@ -583,18 +527,15 @@
                 </div>
             </div>
         </section>
-
         <!-- ========================================= -->
         <!-- 4. 데이터 통계 및 시각화 탭 (#view-stats) -->
         <!-- ========================================= -->
         <section id="view-stats" class="tab-view hidden space-y-6">
-            
             <!-- 헤더 영역 -->
             <div class="border-b border-slate-200 pb-4">
                 <h2 class="text-2xl font-bold text-slate-900">데이터 통계 및 항공기 궤적 시각화</h2>
                 <p class="text-slate-600 text-sm mt-0.5">수집/업로드된 ADS-B CSV 데이터를 기반으로 날짜별/항공기별 항적 지도 및 통계 지표를 시각화합니다.</p>
             </div>
-
             <!-- 컨트롤 드롭다운 및 지도 스타일 옵션 바 -->
             <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3 text-xs">
                 <!-- 1행: 필터 조건 -->
@@ -608,7 +549,6 @@
                             <!-- JS에서 동적 채움 -->
                         </select>
                     </div>
-
                     <!-- icao24 선택 필터 및 검색 기능 -->
                     <div class="flex items-center space-x-2">
                         <label for="filter-icao-select" class="font-bold text-slate-700 whitespace-nowrap">
@@ -622,25 +562,21 @@
                             <!-- JS에서 동적 채움 -->
                         </select>
                     </div>
-
                     <div class="ml-auto text-slate-500 font-mono text-[11px] bg-white px-3 py-1.5 rounded-lg border border-slate-200">
                         <span id="map-active-count">0</span>개 데이터 포인트 시각화 중
                     </div>
                 </div>
-
                 <!-- 2행: 지도 시각화 옵션 툴바 (시각적 혼잡 방지 옵션) -->
                 <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-slate-700">
                     <div class="flex flex-wrap items-center gap-4">
                         <span class="font-bold text-slate-900 flex items-center">
                             <i class="fa-solid fa-sliders text-indigo-600 mr-1.5"></i>시각화 표시 옵션:
                         </span>
-
                         <!-- 웨이포인트 점 토글 -->
                         <label class="flex items-center space-x-1.5 cursor-pointer bg-white px-2.5 py-1 rounded border border-slate-200 hover:bg-slate-100 transition">
                             <input type="checkbox" id="opt-show-points" onchange="updateMapDisplayOptions()" class="rounded text-blue-600 focus:ring-0">
                             <span>모든 포인트 마커 표시</span>
                         </label>
-
                         <!-- 선 스타일 선택 -->
                         <div class="flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded border border-slate-200">
                             <span>선 스타일:</span>
@@ -649,7 +585,6 @@
                                 <option value="dashed">점선 (Dashed)</option>
                             </select>
                         </div>
-
                         <!-- 선 두께 선택 -->
                         <div class="flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded border border-slate-200">
                             <span>선 두께:</span>
@@ -659,20 +594,27 @@
                                 <option value="4">두껍게 (4px)</option>
                             </select>
                         </div>
-
                         <!-- 랜드마크 표시 토글 -->
                         <label class="flex items-center space-x-1.5 cursor-pointer bg-white px-2.5 py-1 rounded border border-slate-200 hover:bg-slate-100 transition">
                             <input type="checkbox" id="opt-show-landmarks" checked onchange="updateMapDisplayOptions()" class="rounded text-blue-600 focus:ring-0">
                             <span>주요 랜드마크 표시</span>
                         </label>
+                        <!-- [신규] 고도별 궤적 색상 토글 -->
+                        <label class="flex items-center space-x-1.5 cursor-pointer bg-white px-2.5 py-1 rounded border border-slate-200 hover:bg-slate-100 transition">
+                            <input type="checkbox" id="opt-altitude-color" onchange="toggleAltitudeColor()" class="rounded text-blue-600 focus:ring-0">
+                            <span>고도별 궤적 색상</span>
+                        </label>
+                        <!-- [신규] 고도 범례 표시 버튼 (고도별 색상 활성화 시 사용 가능) -->
+                        <button type="button" id="btn-legend-toggle" onclick="toggleAltitudeLegend()" disabled class="flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded border border-slate-200 text-slate-400 cursor-not-allowed transition">
+                            <i class="fa-solid fa-list-ul"></i>
+                            <span id="legend-btn-label">범례 표시</span>
+                        </button>
                     </div>
-
                     <div class="text-[11px] text-slate-500 italic">
                         * 마우스로 항적선에 커서를 올리면 해당 비행 경로만 두껍게 강조됩니다.
                     </div>
                 </div>
             </div>
-
             <!-- 비행기 위치 지도시각화 영역 -->
             <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2 px-2">
@@ -685,7 +627,6 @@
                         <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 mr-1"></span>동탄센트럴파크</span>
                         <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 mr-1"></span>시작 지점</span>
                         <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-red-500 mr-1"></span>끝 지점</span>
-                        
                         <!-- 개발자/관리자 모드 활성화 시 표시되는 지도 타일 설정 버튼 -->
                         <button id="admin-map-key-btn" onclick="openApiKeyModal()" class="hidden ml-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold rounded-lg border border-blue-200 transition items-center space-x-1.5">
                             <i class="fa-solid fa-key text-blue-600"></i>
@@ -693,11 +634,64 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- 지도 DOM -->
                 <div id="flight-map" class="shadow-inner border border-slate-200"></div>
             </div>
-
+            <!-- ========================================= -->
+            <!-- [신규] 항공기정보창 (통계 표 행 클릭 시 표시) -->
+            <!-- ========================================= -->
+            <div id="aircraft-info-panel" class="hidden bg-white rounded-2xl border-2 border-blue-200 p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-plane"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900">항공기정보창</h3>
+                            <p class="text-xs text-slate-500">통계 표에서 선택한 항공기의 평균 운항 지표 요약</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openAircraftDataModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition flex items-center space-x-2 shadow-sm">
+                            <i class="fa-solid fa-table"></i>
+                            <span>전체 데이터 보기 (엑셀 형식)</span>
+                        </button>
+                        <button onclick="closeAircraftInfoPanel()" title="정보창 닫기" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="text-slate-500 font-semibold mb-1"><i class="fa-solid fa-id-badge text-blue-500 mr-1"></i>콜사인</div>
+                        <div id="ai-callsign" class="text-base font-bold text-slate-900 font-mono break-all">-</div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="text-slate-500 font-semibold mb-1"><i class="fa-solid fa-fingerprint text-blue-500 mr-1"></i>icao24</div>
+                        <div id="ai-icao24" class="text-base font-bold text-blue-600 font-mono break-all">-</div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="text-slate-500 font-semibold mb-1"><i class="fa-solid fa-arrow-up-wide-short text-blue-500 mr-1"></i>평균 고도 (기하고도)</div>
+                        <div id="ai-alt" class="text-base font-bold text-slate-900 font-mono">-</div>
+                        <div id="ai-alt-sub" class="text-[11px] text-slate-500 mt-0.5">-</div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="text-slate-500 font-semibold mb-1"><i class="fa-solid fa-gauge-high text-blue-500 mr-1"></i>평균 속도 (대지속도)</div>
+                        <div id="ai-speed" class="text-base font-bold text-slate-900 font-mono">-</div>
+                        <div id="ai-speed-sub" class="text-[11px] text-slate-500 mt-0.5">-</div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="text-slate-500 font-semibold mb-1"><i class="fa-solid fa-database text-blue-500 mr-1"></i>수신 레코드 수</div>
+                        <div id="ai-records" class="text-base font-bold text-slate-900 font-mono">-</div>
+                        <div id="ai-records-sub" class="text-[11px] text-slate-500 mt-0.5">-</div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="text-slate-500 font-semibold mb-1"><i class="fa-regular fa-calendar text-blue-500 mr-1"></i>날짜</div>
+                        <div id="ai-date" class="text-base font-bold text-slate-900 font-mono">-</div>
+                        <div id="ai-date-sub" class="text-[11px] text-slate-500 mt-0.5">-</div>
+                    </div>
+                </div>
+            </div>
             <!-- 시각화 화면 밑: icao24 기준 그룹화 통계 표 -->
             <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
@@ -706,13 +700,12 @@
                             <i class="fa-solid fa-table-list text-blue-600"></i>
                             <span>날짜별 & icao24별 평균 운항 지표 통계</span>
                         </h3>
-                        <p class="text-xs text-slate-500 mt-0.5">상단 [날짜 선택] 및 [icao24 필터]에 따라 실시간으로 통계 표 데이터가 동적 필터링됩니다.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">상단 [날짜 선택] 및 [icao24 필터]에 따라 실시간으로 통계 표 데이터가 동적 필터링됩니다. <span class="text-blue-600 font-semibold">행을 클릭하면 표 위에 항공기정보창이 열립니다.</span></p>
                     </div>
                     <span class="text-xs font-mono text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 self-start sm:self-auto">
                         <span id="table-row-count">0</span> Rows
                     </span>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead>
@@ -731,11 +724,8 @@
                     </table>
                 </div>
             </div>
-
         </section>
-
     </main>
-
     <!-- ========================================== -->
     <!-- [비밀번호 입력 모달 - 관리자 전환용] -->
     <!-- ========================================== -->
@@ -750,7 +740,6 @@
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-
             <div class="space-y-3">
                 <label for="admin-password-input" class="block text-xs font-bold text-slate-700">관리자 비밀번호 입력</label>
                 <input type="password" id="admin-password-input" placeholder="비밀번호를 입력하세요" onkeyup="if(event.key==='Enter') submitAdminPassword()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-600" />
@@ -758,14 +747,12 @@
                     <i class="fa-solid fa-triangle-exclamation mr-1"></i>비밀번호가 올바르지 않습니다.
                 </p>
             </div>
-
             <div class="flex justify-end space-x-2 pt-2">
                 <button onclick="closeAdminModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition">취소</button>
                 <button onclick="submitAdminPassword()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition shadow-sm">인증하기</button>
             </div>
         </div>
     </div>
-
     <!-- ========================================== -->
     <!-- [지도 API 키 및 타일 설정 모달] -->
     <!-- ========================================== -->
@@ -780,7 +767,6 @@
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-
             <div class="space-y-4 text-xs text-slate-700">
                 <!-- 타일 제공자 선택 -->
                 <div>
@@ -794,7 +780,6 @@
                         <option value="maptiler">MapTiler Streets (API키 필요)</option>
                     </select>
                 </div>
-
                 <!-- API Key 입력칸 -->
                 <div id="custom-key-container" class="hidden space-y-1.5 p-3 bg-blue-50/60 rounded-xl border border-blue-100">
                     <label for="custom-key-input" class="block font-bold text-blue-900">
@@ -805,7 +790,6 @@
                         * 선택하신 서비스(브이월드, MapTiler 등)에 해당하는 인증키를 입력하세요.
                     </p>
                 </div>
-
                 <!-- API Key 발급 안내 -->
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                     <div class="font-bold text-slate-900 flex items-center">
@@ -818,7 +802,6 @@
                     </ol>
                 </div>
             </div>
-
             <div class="flex items-center justify-end space-x-2 pt-2">
                 <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition">
                     취소
@@ -829,8 +812,55 @@
             </div>
         </div>
     </div>
-
-
+    <!-- ========================================== -->
+    <!-- [신규] 항공기 전체 데이터 팝업 (엑셀 형식 뷰어) -->
+    <!-- ========================================== -->
+    <div id="aircraft-data-modal" onclick="if(event.target===this) closeAircraftDataModal()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-6xl max-h-[90vh] flex flex-col shadow-2xl border border-slate-100">
+            <!-- 팝업 헤더 -->
+            <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-table"></i>
+                    </div>
+                    <div>
+                        <h3 id="aircraft-modal-title" class="text-base font-bold text-slate-900">항공기 전체 수신 데이터</h3>
+                        <p class="text-xs text-slate-500">헤더를 클릭하면 해당 컬럼 기준으로 정렬됩니다. (ESC 키로 닫기)</p>
+                    </div>
+                </div>
+                <button onclick="closeAircraftDataModal()" class="text-slate-400 hover:text-slate-600 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <!-- 툴바 -->
+            <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs">
+                <div class="flex items-center space-x-2">
+                    <label for="aircraft-modal-date" class="font-bold text-slate-700 whitespace-nowrap">
+                        <i class="fa-regular fa-calendar mr-1 text-blue-600"></i>날짜 필터:
+                    </label>
+                    <select id="aircraft-modal-date" onchange="onAircraftModalDateChange()" class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500 shadow-sm min-w-[140px]"></select>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="font-mono text-slate-500 bg-white px-3 py-1.5 rounded-lg border border-slate-200"><span id="aircraft-modal-count">0</span> Rows</span>
+                    <button onclick="downloadAircraftCSV()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center space-x-1.5 shadow-sm">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>CSV 다운로드</span>
+                    </button>
+                </div>
+            </div>
+            <!-- 엑셀 스타일 테이블 -->
+            <div class="flex-1 min-h-0 overflow-auto px-5 py-3">
+                <table class="w-full text-xs font-mono border-collapse">
+                    <thead id="aircraft-modal-thead"></thead>
+                    <tbody id="aircraft-modal-tbody"></tbody>
+                </table>
+            </div>
+            <!-- 푸터 -->
+            <div class="px-5 py-3 border-t border-slate-100 flex justify-end">
+                <button onclick="closeAircraftDataModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition">닫기</button>
+            </div>
+        </div>
+    </div>
     <!-- ========================================== -->
     <!-- [자바스크립트 로직] -->
     <!-- ========================================== -->
@@ -841,20 +871,16 @@
         function switchTab(tabId) {
             const views = document.querySelectorAll('.tab-view');
             views.forEach(v => v.classList.add('hidden'));
-
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(b => b.classList.remove('active'));
-
             const targetView = document.getElementById(`view-${tabId}`);
             if (targetView) {
                 targetView.classList.remove('hidden');
             }
-
             const targetBtn = document.getElementById(`tab-btn-${tabId}`);
             if (targetBtn) {
                 targetBtn.classList.add('active');
             }
-
             if (tabId === 'stats') {
                 initMapIfNeeded();
                 setTimeout(() => {
@@ -865,7 +891,6 @@
                 }, 150);
             }
         }
-
         // ------------------------------------
         // 1. 기본 샘플 ADS-B 데이터셋
         // ------------------------------------
@@ -876,25 +901,21 @@
             { timestamp_utc: "2026-10-23T08:10:00Z", icao24: "71C021", callsign: "KAL702", latitude: 37.520, longitude: 126.550, geometric_altitude_ft: 9800, ground_speed_knots: 320, barometric_altitude_ft: 9750 },
             { timestamp_utc: "2026-10-23T08:15:00Z", icao24: "71C021", callsign: "KAL702", latitude: 37.560, longitude: 126.650, geometric_altitude_ft: 15400, ground_speed_knots: 410, barometric_altitude_ft: 15300 },
             { timestamp_utc: "2026-10-23T08:20:00Z", icao24: "71C021", callsign: "KAL702", latitude: 37.610, longitude: 126.780, geometric_altitude_ft: 22000, ground_speed_knots: 460, barometric_altitude_ft: 21900 },
-
             // ICAO: 71E09A
             { timestamp_utc: "2026-10-23T08:02:00Z", icao24: "71E09A", latitude: 37.558, longitude: 126.790, geometric_altitude_ft: 2500, ground_speed_knots: 180, barometric_altitude_ft: 2480 },
             { timestamp_utc: "2026-10-23T08:07:00Z", icao24: "71E09A", latitude: 37.520, longitude: 126.720, geometric_altitude_ft: 6200, ground_speed_knots: 270, barometric_altitude_ft: 6150 },
             { timestamp_utc: "2026-10-23T08:12:00Z", icao24: "71E09A", latitude: 37.470, longitude: 126.620, geometric_altitude_ft: 12100, ground_speed_knots: 380, barometric_altitude_ft: 12000 },
             { timestamp_utc: "2026-10-23T08:17:00Z", icao24: "71E09A", latitude: 37.410, longitude: 126.500, geometric_altitude_ft: 18500, ground_speed_knots: 430, barometric_altitude_ft: 18400 },
-
             // ICAO: 800C12 (AAR8125)
             { timestamp_utc: "2026-10-23T09:10:00Z", icao24: "800C12", callsign: "AAR8125", latitude: 37.380, longitude: 126.850, geometric_altitude_ft: 28000, ground_speed_knots: 480, barometric_altitude_ft: 27900 },
             { timestamp_utc: "2026-10-23T09:15:00Z", icao24: "800C12", callsign: "AAR8125", latitude: 37.450, longitude: 126.750, geometric_altitude_ft: 21000, ground_speed_knots: 420, barometric_altitude_ft: 20900 },
             { timestamp_utc: "2026-10-23T09:20:00Z", icao24: "800C12", callsign: "AAR8125", latitude: 37.510, longitude: 126.600, geometric_altitude_ft: 13000, ground_speed_knots: 310, barometric_altitude_ft: 12900 },
             { timestamp_utc: "2026-10-23T09:25:00Z", icao24: "800C12", callsign: "AAR8125", latitude: 37.558, longitude: 126.790, geometric_altitude_ft: 1500, ground_speed_knots: 150, barometric_altitude_ft: 1480 },
-
             // 익일 데이터 (2026-10-24)
             { timestamp_utc: "2026-10-24T10:00:00Z", icao24: "71C021", callsign: "KAL702", latitude: 37.460, longitude: 126.440, geometric_altitude_ft: 1100, ground_speed_knots: 155, barometric_altitude_ft: 1090 },
             { timestamp_utc: "2026-10-24T10:05:00Z", icao24: "71C021", callsign: "KAL702", latitude: 37.490, longitude: 126.500, geometric_altitude_ft: 5200, ground_speed_knots: 260, barometric_altitude_ft: 5150 },
             { timestamp_utc: "2026-10-24T10:10:00Z", icao24: "71C021", callsign: "KAL702", latitude: 37.540, longitude: 126.620, geometric_altitude_ft: 11500, ground_speed_knots: 340, barometric_altitude_ft: 11400 }
         ];
-
         // 전역 상태 관리
         let rawDataset = [...defaultSampleData];
         let processedDataset = [];
@@ -905,16 +926,16 @@
         let currentTileLayer = null;
         let activeTileProvider = 'carto';
         let customApiKey = '';
-
         // 지도 가시성 제어 옵션 (시각적 혼잡 방지 설정)
         let mapOptions = {
             showPoints: false,          // 포인트 마커 기본 비활성화 (지도가 지저분해지는 문제 방지)
             showLandmarks: true,        // 랜드마크 마커 표시
             lineStyle: 'solid',         // 'solid' 또는 'dashed'
             lineWidth: 3,               // 선 두께 (2~4)
-            splitLegs: true             // 15분 이상 시간격차 발생 시 별도 궤적으로 분할
+            splitLegs: true,            // 15분 이상 시간격차 발생 시 별도 궤적으로 분할
+            colorByAltitude: false,     // [신규] 고도별 궤적 색상 사용 여부
+            showLegend: false           // [신규] 고도 범례 표시 여부
         };
-
         // 고정 랜드마크 데이터 (상하 이격 오프셋을 통한 라벨 겹침 방지 설정)
         const fixedLandmarks = [
             {
@@ -938,13 +959,36 @@
                 tooltipOffset: [0, 12]
             }
         ];
-
         // 색상 팔레트 (항공기 궤적 구분용)
         const trajectoryColors = [
-            '#2563eb', '#dc2626', '#059669', '#d97706', '#7c3aed', 
+            '#2563eb', '#dc2626', '#059669', '#d97706', '#7c3aed',
             '#0891b2', '#ea580c', '#4f46e5', '#be185d', '#15803d'
         ];
-
+        // [신규] 고도 구간별 색상 (기하고도, ft)
+        const altitudeBands = [
+            { min: 0,     max: 2000,     color: '#06b6d4', label: '0 – 2,000 ft' },
+            { min: 2000,  max: 5000,     color: '#16a34a', label: '2,000 – 5,000 ft' },
+            { min: 5000,  max: 10000,    color: '#eab308', label: '5,000 – 10,000 ft' },
+            { min: 10000, max: 20000,    color: '#f97316', label: '10,000 – 20,000 ft' },
+            { min: 20000, max: 30000,    color: '#dc2626', label: '20,000 – 30,000 ft' },
+            { min: 30000, max: Infinity, color: '#7c3aed', label: '30,000 ft 이상' }
+        ];
+        function getAltitudeColor(alt) {
+            if (typeof alt !== 'number' || !isFinite(alt)) return '#94a3b8';
+            for (const band of altitudeBands) {
+                if (alt < band.max) return band.color;
+            }
+            return altitudeBands[altitudeBands.length - 1].color;
+        }
+        // [신규] HTML 이스케이프 헬퍼 (신규 UI 전용)
+        function escapeHtml(value) {
+            return String(value === undefined || value === null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
         // ------------------------------------
         // 4. 지도 (Leaflet) 시각화 엔진
         // ------------------------------------
@@ -953,26 +997,20 @@
                 leafletMap.invalidateSize();
                 return;
             }
-
             leafletMap = L.map('flight-map', {
                 maxZoom: 20
             }).setView([37.21, 127.00], 11);
-
             setTileLayer('carto');
-
             mapLayerGroup = L.layerGroup().addTo(leafletMap);
         }
-
         function setTileLayer(provider, apiKey = '') {
             if (currentTileLayer && leafletMap) {
                 leafletMap.removeLayer(currentTileLayer);
             }
-
             let tileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
             let attrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
             let maxNatZoom = 19;
             let subdomains = 'abcd';
-
             if (provider === 'carto') {
                 tileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
                 attrib = '&copy; OpenStreetMap contributors &copy; CARTO';
@@ -995,43 +1033,95 @@
                 tileUrl = `https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${apiKey}`;
                 attrib = '&copy; MapTiler &copy; OpenStreetMap contributors';
             }
-
             currentTileLayer = L.tileLayer(tileUrl, {
                 maxZoom: 20,
                 maxNativeZoom: maxNatZoom,
                 subdomains: subdomains,
                 attribution: attrib
             }).addTo(leafletMap);
-
             activeTileProvider = provider;
         }
-
         function updateMapDisplayOptions() {
             mapOptions.showPoints = document.getElementById('opt-show-points').checked;
             mapOptions.lineStyle = document.getElementById('opt-line-style').value;
             mapOptions.lineWidth = parseInt(document.getElementById('opt-line-width').value) || 3;
             mapOptions.showLandmarks = document.getElementById('opt-show-landmarks').checked;
-
+            mapOptions.colorByAltitude = document.getElementById('opt-altitude-color').checked;
+            updateLegendButton();
+            updateLegend();
             renderVisualizations();
         }
-
+        // ------------------------------------
+        // [신규] 고도별 색상 / 범례 제어
+        // ------------------------------------
+        let legendControl = null;
+        function toggleAltitudeColor() {
+            const on = document.getElementById('opt-altitude-color').checked;
+            mapOptions.showLegend = on;   // 켜면 범례도 자동 표시
+            updateMapDisplayOptions();
+        }
+        function toggleAltitudeLegend() {
+            if (!mapOptions.colorByAltitude) return;
+            mapOptions.showLegend = !mapOptions.showLegend;
+            updateLegendButton();
+            updateLegend();
+        }
+        function updateLegendButton() {
+            const btn = document.getElementById('btn-legend-toggle');
+            const label = document.getElementById('legend-btn-label');
+            if (!btn || !label) return;
+            if (!mapOptions.colorByAltitude) {
+                btn.disabled = true;
+                btn.className = 'flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded border border-slate-200 text-slate-400 cursor-not-allowed transition';
+                label.innerText = '범례 표시';
+            } else if (mapOptions.showLegend) {
+                btn.disabled = false;
+                btn.className = 'flex items-center space-x-1.5 bg-blue-600 px-2.5 py-1 rounded border border-blue-600 text-white hover:bg-blue-700 cursor-pointer transition';
+                label.innerText = '범례 숨기기';
+            } else {
+                btn.disabled = false;
+                btn.className = 'flex items-center space-x-1.5 bg-white px-2.5 py-1 rounded border border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer transition';
+                label.innerText = '범례 표시';
+            }
+        }
+        function updateLegend() {
+            if (!leafletMap) return;
+            if (legendControl) {
+                leafletMap.removeControl(legendControl);
+                legendControl = null;
+            }
+            if (mapOptions.colorByAltitude && mapOptions.showLegend) {
+                legendControl = L.control({ position: 'bottomright' });
+                legendControl.onAdd = function () {
+                    const div = L.DomUtil.create('div', 'bg-white/95 border border-slate-300 rounded-lg shadow-md p-2.5 text-[11px] font-sans');
+                    div.innerHTML =
+                        `<div class="font-bold text-slate-800 mb-1.5"><i class="fa-solid fa-layer-group mr-1 text-blue-600"></i>고도 범례 (기하고도)</div>` +
+                        altitudeBands.map(b =>
+                            `<div class="flex items-center space-x-2 mb-0.5">
+                                <span class="inline-block w-6 h-1.5 rounded" style="background:${b.color}"></span>
+                                <span class="text-slate-700 font-mono">${b.label}</span>
+                             </div>`
+                        ).join('');
+                    L.DomEvent.disableClickPropagation(div);
+                    return div;
+                };
+                legendControl.addTo(leafletMap);
+            }
+        }
         // icao24 필터 드롭다운 실시간 검색 함수
         function filterIcaoOptions() {
             const searchInput = document.getElementById('filter-icao-search');
             const searchText = searchInput ? searchInput.value.trim().toUpperCase() : '';
             const icaoSelect = document.getElementById('filter-icao-select');
-            
             if (icaoSelect) {
                 const uniqueIcaos = Object.keys(icaoCallsignMap).sort();
                 const filteredIcaos = uniqueIcaos.filter(icao => {
                     const callsign = (icaoCallsignMap[icao] || '').toUpperCase();
                     return icao.includes(searchText) || callsign.includes(searchText);
                 });
-
                 const currentValue = icaoSelect.value;
                 icaoSelect.innerHTML = `<option value="ALL">전체 icao24 (ALL)</option>` +
                     filteredIcaos.map(icao => `<option value="${icao}">${icao} (${icaoCallsignMap[icao]})</option>`).join('');
-
                 if (filteredIcaos.includes(currentValue)) {
                     icaoSelect.value = currentValue;
                 } else {
@@ -1040,19 +1130,14 @@
             }
             renderVisualizations();
         }
-
         function renderVisualizations() {
             if (!leafletMap || !mapLayerGroup) return;
-
             mapLayerGroup.clearLayers();
-
             const allLatLngs = [];
-
             // 1. 고정 랜드마크 마커 등록 (위/아래 방향 분리로 텍스트 겹침 방지)
             if (mapOptions.showLandmarks) {
                 fixedLandmarks.forEach(lm => {
                     allLatLngs.push([lm.lat, lm.lng]);
-
                     const landmarkIcon = L.divIcon({
                         className: 'custom-landmark-icon',
                         html: `<div class="landmark-pin w-8 h-8" style="background-color: ${lm.bgColor}">
@@ -1061,7 +1146,6 @@
                         iconSize: [32, 32],
                         iconAnchor: [16, 16]
                     });
-
                     const marker = L.marker([lm.lat, lm.lng], { icon: landmarkIcon }).addTo(mapLayerGroup);
                     marker.bindPopup(`
                         <div class="text-xs font-sans p-1">
@@ -1072,7 +1156,6 @@
                             <div class="text-slate-600"><b>좌표:</b> ${lm.desc}</div>
                         </div>
                     `);
-
                     marker.bindTooltip(lm.name, {
                         permanent: true,
                         direction: lm.tooltipDirection || 'bottom',
@@ -1081,12 +1164,10 @@
                     });
                 });
             }
-
             const selectedDate = document.getElementById('filter-date-select').value;
             const selectedIcao = document.getElementById('filter-icao-select').value;
             const searchInput = document.getElementById('filter-icao-search');
             const searchText = searchInput ? searchInput.value.trim().toUpperCase() : '';
-
             // 드롭다운 및 검색 필터 기반 데이터 필터링
             let filtered = processedDataset;
             if (selectedDate && selectedDate !== 'ALL') {
@@ -1095,14 +1176,12 @@
             if (selectedIcao && selectedIcao !== 'ALL') {
                 filtered = filtered.filter(d => d.icao24 === selectedIcao);
             } else if (searchText) {
-                filtered = filtered.filter(d => 
-                    d.icao24.includes(searchText) || 
+                filtered = filtered.filter(d =>
+                    d.icao24.includes(searchText) ||
                     (d.callsign && d.callsign.toUpperCase().includes(searchText))
                 );
             }
-
             document.getElementById('map-active-count').innerText = filtered.length;
-
             // icao24 별로 그룹화
             const groupedByIcao = {};
             filtered.forEach(row => {
@@ -1111,28 +1190,21 @@
                 }
                 groupedByIcao[row.icao24].push(row);
             });
-
             let colorIdx = 0;
-
             Object.keys(groupedByIcao).forEach(icao => {
                 const list = groupedByIcao[icao].sort((a, b) => new Date(a.timestamp_utc) - new Date(b.timestamp_utc));
                 if (list.length === 0) return;
-
                 const strokeColor = trajectoryColors[colorIdx % trajectoryColors.length];
                 colorIdx++;
-
                 const sampleCallsign = list[0].callsign || 'missing';
                 const labelText = `${icao} (${sampleCallsign})`;
-
                 // 15분 이상 시간차가 나면 비행 구간(Segment) 분할
                 const segments = [];
                 let currentSeg = [list[0]];
-
                 for (let i = 1; i < list.length; i++) {
                     const prevTime = new Date(list[i-1].timestamp_utc).getTime();
                     const currTime = new Date(list[i].timestamp_utc).getTime();
                     const diffMins = (currTime - prevTime) / (1000 * 60);
-
                     if (mapOptions.splitLegs && !isNaN(diffMins) && diffMins > 15) {
                         segments.push(currentSeg);
                         currentSeg = [list[i]];
@@ -1141,44 +1213,72 @@
                     }
                 }
                 if (currentSeg.length > 0) segments.push(currentSeg);
-
                 // 구간별 항적 그리기
                 segments.forEach(seg => {
                     const latLngs = seg.map(item => [item.latitude, item.longitude]);
                     allLatLngs.push(...latLngs);
-
-                    // 깔끔한 항적선 (Polyline) 생성
-                    const polyline = L.polyline(latLngs, {
-                        color: strokeColor,
-                        weight: mapOptions.lineWidth,
-                        opacity: 0.8,
-                        dashArray: mapOptions.lineStyle === 'dashed' ? '4, 6' : null
-                    }).addTo(mapLayerGroup);
-
-                    // 마우스 호버 시 강조
-                    polyline.on('mouseover', function() {
-                        this.setStyle({ weight: mapOptions.lineWidth + 3, opacity: 1.0 });
-                        this.bringToFront();
-                    });
-                    polyline.on('mouseout', function() {
-                        this.setStyle({ weight: mapOptions.lineWidth, opacity: 0.8 });
-                    });
-
-                    polyline.bindTooltip(`<b>${labelText}</b><br>수신 포인트: ${seg.length}개`, {
-                        sticky: true
-                    });
-
+                    // 구간(Segment)을 구성하는 모든 선 레이어 (호버 강조를 일괄 적용하기 위함)
+                    const lineLayers = [];
+                    const hoverOn = () => {
+                        lineLayers.forEach(l => {
+                            l.setStyle({ weight: mapOptions.lineWidth + 3, opacity: 1.0 });
+                            l.bringToFront();
+                        });
+                    };
+                    const hoverOff = () => {
+                        lineLayers.forEach(l => l.setStyle({ weight: mapOptions.lineWidth, opacity: 0.8 }));
+                    };
+                    if (mapOptions.colorByAltitude) {
+                        // [신규] 고도별 색상: 인접한 두 포인트마다 평균 고도에 해당하는 색으로 선분 생성
+                        for (let i = 0; i < seg.length - 1; i++) {
+                            const a = seg[i];
+                            const b = seg[i + 1];
+                            const avgAlt = (a.geometric_altitude_ft + b.geometric_altitude_ft) / 2;
+                            const piece = L.polyline(
+                                [[a.latitude, a.longitude], [b.latitude, b.longitude]],
+                                {
+                                    color: getAltitudeColor(avgAlt),
+                                    weight: mapOptions.lineWidth,
+                                    opacity: 0.8,
+                                    lineCap: 'round',
+                                    dashArray: mapOptions.lineStyle === 'dashed' ? '4, 6' : null
+                                }
+                            ).addTo(mapLayerGroup);
+                            piece.on('mouseover', hoverOn);
+                            piece.on('mouseout', hoverOff);
+                            piece.bindTooltip(
+                                `<b>${labelText}</b><br>구간 평균 고도: ${isFinite(avgAlt) ? Math.round(avgAlt).toLocaleString() + ' ft' : '-'}<br>수신 포인트: ${seg.length}개`,
+                                { sticky: true }
+                            );
+                            lineLayers.push(piece);
+                        }
+                    } else {
+                        // 깔끔한 항적선 (Polyline) 생성
+                        const polyline = L.polyline(latLngs, {
+                            color: strokeColor,
+                            weight: mapOptions.lineWidth,
+                            opacity: 0.8,
+                            dashArray: mapOptions.lineStyle === 'dashed' ? '4, 6' : null
+                        }).addTo(mapLayerGroup);
+                        // 마우스 호버 시 강조
+                        polyline.on('mouseover', hoverOn);
+                        polyline.on('mouseout', hoverOff);
+                        polyline.bindTooltip(`<b>${labelText}</b><br>수신 포인트: ${seg.length}개`, {
+                            sticky: true
+                        });
+                        lineLayers.push(polyline);
+                    }
                     // 웨이포인트 포인트 마커 (사용자가 옵션 체크했을 때만 표시)
                     if (mapOptions.showPoints) {
                         seg.forEach(pt => {
+                            const ptColor = mapOptions.colorByAltitude ? getAltitudeColor(pt.geometric_altitude_ft) : strokeColor;
                             const circle = L.circleMarker([pt.latitude, pt.longitude], {
                                 radius: 3,
-                                color: strokeColor,
+                                color: ptColor,
                                 fillColor: '#ffffff',
                                 fillOpacity: 0.9,
                                 weight: 1.5
                             }).addTo(mapLayerGroup);
-
                             circle.bindPopup(`
                                 <div class="text-xs p-1 font-sans">
                                     <div class="font-bold text-blue-600 mb-1">${pt.icao24} (${pt.callsign})</div>
@@ -1189,7 +1289,6 @@
                             `);
                         });
                     }
-
                     // 시작점 (초록 마커)
                     const startPt = seg[0];
                     const startMarker = L.circleMarker([startPt.latitude, startPt.longitude], {
@@ -1199,7 +1298,6 @@
                         fillOpacity: 1,
                         weight: 2
                     }).addTo(mapLayerGroup);
-
                     startMarker.bindPopup(`
                         <div class="text-xs font-sans">
                             <strong class="text-emerald-600">Start - ${labelText}</strong><br>
@@ -1207,7 +1305,6 @@
                             고도: ${startPt.geometric_altitude_ft} ft
                         </div>
                     `);
-
                     // 끝점 (빨강 마커)
                     const endPt = seg[seg.length - 1];
                     const endMarker = L.circleMarker([endPt.latitude, endPt.longitude], {
@@ -1217,7 +1314,6 @@
                         fillOpacity: 1,
                         weight: 2
                     }).addTo(mapLayerGroup);
-
                     endMarker.bindPopup(`
                         <div class="text-xs font-sans">
                             <strong class="text-red-600">End - ${labelText}</strong><br>
@@ -1227,16 +1323,13 @@
                     `);
                 });
             });
-
             // 지도 영역 자동 줌 맞춤
             if (allLatLngs.length > 0) {
                 const bounds = L.latLngBounds(allLatLngs);
                 leafletMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
             }
-
             renderStatsTable();
         }
-
         // ------------------------------------
         // API 키 및 타일 설정 모달 핸들러
         // ------------------------------------
@@ -1250,11 +1343,9 @@
             toggleApiKeyInputDisplay();
             document.getElementById('apikey-modal').classList.remove('hidden');
         }
-
         function closeApiKeyModal() {
             document.getElementById('apikey-modal').classList.add('hidden');
         }
-
         function toggleApiKeyInputDisplay() {
             const provider = document.getElementById('tile-provider-select').value;
             const keyContainer = document.getElementById('custom-key-container');
@@ -1264,33 +1355,29 @@
                 keyContainer.classList.add('hidden');
             }
         }
-
         function applyMapTileSettings() {
             const provider = document.getElementById('tile-provider-select').value;
             const keyInput = document.getElementById('custom-key-input').value.trim();
-
             if ((provider.startsWith('vworld') || provider === 'maptiler') && !keyInput) {
                 alert('선택하신 지도 서비스를 이용하려면 API Key를 입력해야 합니다.');
                 return;
             }
-
             customApiKey = keyInput;
             setTileLayer(provider, customApiKey);
             closeApiKeyModal();
         }
-
         // ------------------------------------
         // 5. 통계 표 렌더링 (groupby: date & icao24)
         // ------------------------------------
+        let statsAggregated = {};          // [신규] 현재 통계 표에 표시된 집계 결과 (key: date_icao24)
+        let selectedAircraftKey = null;    // [신규] 항공기정보창에 표시 중인 행 key
         function renderStatsTable() {
             const tableBody = document.getElementById('stats-table-body');
             const selectedDate = document.getElementById('filter-date-select').value;
             const selectedIcao = document.getElementById('filter-icao-select').value;
             const searchInput = document.getElementById('filter-icao-search');
             const searchText = searchInput ? searchInput.value.trim().toUpperCase() : '';
-            
             const aggregatedMap = {};
-
             processedDataset.forEach(row => {
                 if (selectedDate && selectedDate !== 'ALL' && row.date !== selectedDate) return;
                 if (selectedIcao && selectedIcao !== 'ALL') {
@@ -1300,7 +1387,6 @@
                     const matchCallsign = row.callsign && row.callsign.toUpperCase().includes(searchText);
                     if (!matchIcao && !matchCallsign) return;
                 }
-
                 const key = `${row.date}_${row.icao24}`;
                 if (!aggregatedMap[key]) {
                     aggregatedMap[key] = {
@@ -1310,33 +1396,36 @@
                         sum_geo_alt: 0,
                         sum_speed: 0,
                         sum_baro_alt: 0,
+                        max_geo_alt: -Infinity,
+                        max_speed: -Infinity,
                         count: 0
                     };
                 }
                 aggregatedMap[key].sum_geo_alt += row.geometric_altitude_ft;
                 aggregatedMap[key].sum_speed += row.ground_speed_knots;
                 aggregatedMap[key].sum_baro_alt += row.barometric_altitude_ft;
+                aggregatedMap[key].max_geo_alt = Math.max(aggregatedMap[key].max_geo_alt, row.geometric_altitude_ft);
+                aggregatedMap[key].max_speed = Math.max(aggregatedMap[key].max_speed, row.ground_speed_knots);
                 aggregatedMap[key].count += 1;
             });
-
+            statsAggregated = aggregatedMap;
             const rows = Object.values(aggregatedMap).sort((a, b) => b.date.localeCompare(a.date) || a.icao24.localeCompare(b.icao24));
-
             document.getElementById('table-row-count').innerText = rows.length;
-
             if (rows.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">선택한 필터 조건에 해당하는 데이터가 없습니다.</td></tr>`;
+                refreshAircraftInfoPanel();
                 return;
             }
-
             tableBody.innerHTML = rows.map(r => {
                 const avgGeo = (r.sum_geo_alt / r.count).toFixed(1);
                 const avgSpeed = (r.sum_speed / r.count).toFixed(1);
                 const avgBaro = (r.sum_baro_alt / r.count).toFixed(1);
-
+                const rowKey = `${r.date}_${r.icao24}`;
+                const isSelected = rowKey === selectedAircraftKey;
                 return `
-                    <tr class="hover:bg-slate-50 transition">
+                    <tr data-key="${escapeHtml(rowKey)}" onclick="selectAircraftByKey(this.dataset.key)" title="클릭하여 항공기정보창 열기" class="cursor-pointer transition ${isSelected ? 'bg-blue-100' : 'hover:bg-blue-50'}">
                         <td class="p-3 font-semibold text-slate-900">${r.date}</td>
-                        <td class="p-3 font-bold text-blue-600">${r.icao24} (${r.callsign})</td>
+                        <td class="p-3 font-bold text-blue-600">${r.icao24} (${r.callsign})<i class="fa-solid fa-circle-info text-slate-300 ml-1.5 text-[10px]"></i></td>
                         <td class="p-3">${Number(avgGeo).toLocaleString()} ft</td>
                         <td class="p-3">${avgSpeed} kts</td>
                         <td class="p-3">${Number(avgBaro).toLocaleString()} ft</td>
@@ -1344,8 +1433,176 @@
                     </tr>
                 `;
             }).join('');
+            refreshAircraftInfoPanel();
         }
-
+        // ------------------------------------
+        // [신규] 항공기정보창 (Aircraft Info Panel)
+        // ------------------------------------
+        function fmtNumber(value, digits = 1) {
+            if (typeof value !== 'number' || !isFinite(value)) return '-';
+            return value.toLocaleString(undefined, { maximumFractionDigits: digits });
+        }
+        function selectAircraftByKey(key) {
+            if (!key || !statsAggregated[key]) return;
+            selectedAircraftKey = key;
+            renderStatsTable();   // 선택 행 강조 + 정보창 갱신
+            const panel = document.getElementById('aircraft-info-panel');
+            if (panel && !panel.classList.contains('hidden')) {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        function closeAircraftInfoPanel() {
+            selectedAircraftKey = null;
+            renderStatsTable();
+        }
+        function refreshAircraftInfoPanel() {
+            const panel = document.getElementById('aircraft-info-panel');
+            if (!panel) return;
+            const agg = selectedAircraftKey ? statsAggregated[selectedAircraftKey] : null;
+            if (!agg) {
+                selectedAircraftKey = null;
+                panel.classList.add('hidden');
+                return;
+            }
+            const aircraftAll = processedDataset.filter(d => d.icao24 === agg.icao24);
+            const dateCount = new Set(aircraftAll.map(d => d.date)).size;
+            const avgGeo = agg.sum_geo_alt / agg.count;
+            const avgBaro = agg.sum_baro_alt / agg.count;
+            const avgSpeed = agg.sum_speed / agg.count;
+            document.getElementById('ai-callsign').textContent = agg.callsign;
+            document.getElementById('ai-icao24').textContent = agg.icao24;
+            document.getElementById('ai-alt').textContent = `${fmtNumber(avgGeo)} ft`;
+            document.getElementById('ai-alt-sub').textContent = `기압고도 평균 ${fmtNumber(avgBaro)} ft · 최고 ${fmtNumber(agg.max_geo_alt, 0)} ft`;
+            document.getElementById('ai-speed').textContent = `${fmtNumber(avgSpeed)} kts`;
+            document.getElementById('ai-speed-sub').textContent = `최대 ${fmtNumber(agg.max_speed, 0)} kts`;
+            document.getElementById('ai-records').textContent = `${agg.count.toLocaleString()} 건`;
+            document.getElementById('ai-records-sub').textContent = `전체 기간 ${aircraftAll.length.toLocaleString()} 건 기록`;
+            document.getElementById('ai-date').textContent = agg.date;
+            document.getElementById('ai-date-sub').textContent = `총 ${dateCount}일 동안 수신됨`;
+            panel.classList.remove('hidden');
+        }
+        // ------------------------------------
+        // [신규] 항공기 전체 데이터 팝업 (엑셀 형식)
+        // ------------------------------------
+        const aircraftDataCols = [
+            { key: 'timestamp_utc',          label: 'timestamp_utc',          num: false },
+            { key: 'date',                   label: 'date',                   num: false },
+            { key: 'icao24',                 label: 'icao24',                 num: false },
+            { key: 'callsign',               label: 'callsign',               num: false },
+            { key: 'latitude',               label: 'latitude',               num: true, fmt: v => fmtNumber(v, 5) },
+            { key: 'longitude',              label: 'longitude',              num: true, fmt: v => fmtNumber(v, 5) },
+            { key: 'geometric_altitude_ft',  label: 'geometric_altitude_ft',  num: true, fmt: v => fmtNumber(v, 1) },
+            { key: 'ground_speed_knots',     label: 'ground_speed_knots',     num: true, fmt: v => fmtNumber(v, 1) },
+            { key: 'barometric_altitude_ft', label: 'barometric_altitude_ft', num: true, fmt: v => fmtNumber(v, 1) }
+        ];
+        let aircraftModalState = { icao24: null, date: 'ALL', sortKey: 'timestamp_utc', sortDir: 'asc' };
+        function openAircraftDataModal() {
+            const agg = selectedAircraftKey ? statsAggregated[selectedAircraftKey] : null;
+            if (!agg) return;
+            aircraftModalState = { icao24: agg.icao24, date: 'ALL', sortKey: 'timestamp_utc', sortDir: 'asc' };
+            document.getElementById('aircraft-modal-title').textContent = `${agg.icao24} (${agg.callsign}) 전체 수신 데이터`;
+            const dates = [...new Set(processedDataset.filter(d => d.icao24 === agg.icao24).map(d => d.date))].sort();
+            const dateSelect = document.getElementById('aircraft-modal-date');
+            dateSelect.innerHTML = `<option value="ALL">전체 날짜 (ALL)</option>` +
+                dates.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+            dateSelect.value = 'ALL';
+            renderAircraftDataTable();
+            document.getElementById('aircraft-data-modal').classList.remove('hidden');
+        }
+        function closeAircraftDataModal() {
+            document.getElementById('aircraft-data-modal').classList.add('hidden');
+        }
+        function onAircraftModalDateChange() {
+            aircraftModalState.date = document.getElementById('aircraft-modal-date').value;
+            renderAircraftDataTable();
+        }
+        function sortAircraftData(key) {
+            if (aircraftModalState.sortKey === key) {
+                aircraftModalState.sortDir = aircraftModalState.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                aircraftModalState.sortKey = key;
+                aircraftModalState.sortDir = 'asc';
+            }
+            renderAircraftDataTable();
+        }
+        function getAircraftModalRows() {
+            const st = aircraftModalState;
+            let rows = processedDataset.filter(d => d.icao24 === st.icao24);
+            if (st.date && st.date !== 'ALL') {
+                rows = rows.filter(d => d.date === st.date);
+            }
+            const dir = st.sortDir === 'asc' ? 1 : -1;
+            const key = st.sortKey;
+            return rows.slice().sort((a, b) => {
+                const va = a[key];
+                const vb = b[key];
+                if (typeof va === 'number' && typeof vb === 'number') {
+                    const na = isNaN(va) ? -Infinity : va;
+                    const nb = isNaN(vb) ? -Infinity : vb;
+                    return (na - nb) * dir;
+                }
+                return String(va === undefined ? '' : va).localeCompare(String(vb === undefined ? '' : vb)) * dir;
+            });
+        }
+        function renderAircraftDataTable() {
+            const st = aircraftModalState;
+            const rows = getAircraftModalRows();
+            document.getElementById('aircraft-modal-count').textContent = rows.length;
+            const thClass = 'border border-slate-300 bg-slate-100 px-2.5 py-2 text-slate-700 font-bold whitespace-nowrap sticky top-0 z-10 cursor-pointer select-none hover:bg-slate-200';
+            document.getElementById('aircraft-modal-thead').innerHTML = `<tr>
+                <th class="border border-slate-300 bg-slate-200 px-2.5 py-2 text-slate-500 font-bold text-center sticky top-0 z-10">#</th>
+                ${aircraftDataCols.map(c => {
+                    const arrow = st.sortKey === c.key ? (st.sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+                    return `<th onclick="sortAircraftData('${c.key}')" class="${thClass} ${c.num ? 'text-right' : 'text-left'}">${c.label}<span class="text-blue-600">${arrow}</span></th>`;
+                }).join('')}
+            </tr>`;
+            const tbody = document.getElementById('aircraft-modal-tbody');
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${aircraftDataCols.length + 1}" class="border border-slate-200 p-4 text-center text-slate-400">표시할 데이터가 없습니다.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = rows.map((r, idx) => `
+                <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'} hover:bg-blue-50 transition">
+                    <td class="border border-slate-200 bg-slate-100 px-2.5 py-1.5 text-center text-slate-500 font-semibold">${idx + 1}</td>
+                    ${aircraftDataCols.map(c => {
+                        const raw = r[c.key];
+                        const text = c.num ? (c.fmt ? c.fmt(raw) : fmtNumber(raw)) : escapeHtml(raw);
+                        return `<td class="border border-slate-200 px-2.5 py-1.5 whitespace-nowrap text-slate-700 ${c.num ? 'text-right' : 'text-left'}">${text}</td>`;
+                    }).join('')}
+                </tr>
+            `).join('');
+        }
+        function downloadAircraftCSV() {
+            const rows = getAircraftModalRows();
+            if (rows.length === 0) {
+                alert('다운로드할 데이터가 없습니다.');
+                return;
+            }
+            const exportRows = rows.map(r => {
+                const o = {};
+                aircraftDataCols.forEach(c => { o[c.key] = r[c.key]; });
+                return o;
+            });
+            const csv = Papa.unparse(exportRows);
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${aircraftModalState.icao24}_adsb_data.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        // ESC 키로 항공기 데이터 팝업 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('aircraft-data-modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeAircraftDataModal();
+                }
+            }
+        });
         // ------------------------------------
         // 6. 관리자 모드 및 CSV 업로드 처리
         // ------------------------------------
@@ -1355,23 +1612,19 @@
             document.getElementById('admin-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('admin-password-input').focus(), 100);
         }
-
         function closeAdminModal() {
             document.getElementById('admin-modal').classList.add('hidden');
         }
-
         function submitAdminPassword() {
             const pwd = document.getElementById('admin-password-input').value;
             if (pwd === '1234waw') {
                 isAdmin = true;
                 closeAdminModal();
-                
                 document.getElementById('admin-badge').className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800";
                 document.getElementById('admin-badge').innerHTML = '<i class="fa-solid fa-user-shield mr-1"></i>관리자 모드 활성화됨';
                 document.getElementById('btn-admin-toggle').classList.add('hidden');
                 document.getElementById('btn-user-toggle').classList.remove('hidden');
                 document.getElementById('admin-upload-panel').classList.remove('hidden');
-
                 const mapBtn = document.getElementById('admin-map-key-btn');
                 if (mapBtn) {
                     mapBtn.classList.remove('hidden');
@@ -1381,7 +1634,6 @@
                 document.getElementById('password-error-msg').classList.remove('hidden');
             }
         }
-
         function switchToUserMode() {
             isAdmin = false;
             document.getElementById('admin-badge').className = "px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-700";
@@ -1389,22 +1641,18 @@
             document.getElementById('btn-admin-toggle').classList.remove('hidden');
             document.getElementById('btn-user-toggle').classList.add('hidden');
             document.getElementById('admin-upload-panel').classList.add('hidden');
-
             const mapBtn = document.getElementById('admin-map-key-btn');
             if (mapBtn) {
                 mapBtn.classList.add('hidden');
                 mapBtn.classList.remove('flex');
             }
         }
-
         function handleCSVUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const feedback = document.getElementById('upload-feedback');
             feedback.innerText = "CSV 데이터 파싱 중...";
             feedback.classList.remove('hidden');
-
             Papa.parse(file, {
                 header: true,
                 skipEmptyLines: true,
@@ -1412,7 +1660,6 @@
                     if (results.data && results.data.length > 0) {
                         rawDataset = results.data;
                         processDataset();
-
                         feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>성공적으로 ${results.data.length}개의 ADS-B 데이터 행을 업로드하고 분석했습니다!`;
                         feedback.className = "mt-3 text-xs font-bold text-emerald-700";
                     } else {
@@ -1426,7 +1673,6 @@
                 }
             });
         }
-
         function restoreSampleData() {
             rawDataset = [...defaultSampleData];
             processDataset();
@@ -1435,7 +1681,6 @@
             feedback.className = "mt-3 text-xs font-bold text-slate-600";
             feedback.classList.remove('hidden');
         }
-
         // ------------------------------------
         // 7. 데이터 파싱 및 드롭다운 자동 매핑 (유효 GPS 좌표 정제 적용)
         // ------------------------------------
@@ -1449,10 +1694,8 @@
                 if (!dateVal) {
                     dateVal = new Date().toISOString().split('T')[0];
                 }
-
                 const lat = parseFloat(item.latitude);
                 const lng = parseFloat(item.longitude);
-
                 return {
                     timestamp_utc: item.timestamp_utc || item.timestamp || '',
                     date: dateVal,
@@ -1465,14 +1708,12 @@
                     barometric_altitude_ft: parseFloat(item.barometric_altitude_ft || item.baro_altitude || item.geometric_altitude_ft || 0)
                 };
             }).filter(item => !isNaN(item.latitude) && !isNaN(item.longitude) && item.latitude !== 0 && item.longitude !== 0);
-
             const dateSelect = document.getElementById('filter-date-select');
             if (dateSelect) {
                 const uniqueDates = [...new Set(processedDataset.map(d => d.date))].sort();
-                dateSelect.innerHTML = `<option value="ALL">전체 날짜 (ALL)</option>` + 
+                dateSelect.innerHTML = `<option value="ALL">전체 날짜 (ALL)</option>` +
                     uniqueDates.map(d => `<option value="${d}">${d}</option>`).join('');
             }
-
             const icaoSelect = document.getElementById('filter-icao-select');
             if (icaoSelect) {
                 icaoCallsignMap = {};
@@ -1481,15 +1722,12 @@
                         icaoCallsignMap[d.icao24] = d.callsign || 'missing';
                     }
                 });
-
                 const uniqueIcaos = Object.keys(icaoCallsignMap).sort();
                 icaoSelect.innerHTML = `<option value="ALL">전체 icao24 (ALL)</option>` +
                     uniqueIcaos.map(icao => `<option value="${icao}">${icao} (${icaoCallsignMap[icao]})</option>`).join('');
             }
-
             filterIcaoOptions();
         }
-
         window.addEventListener('DOMContentLoaded', () => {
             processDataset();
             switchTab('home');
